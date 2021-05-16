@@ -1,6 +1,6 @@
 // @ts-nocheck
 import express, { json, Request, Response } from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { User } from "../../models/User";
 import { Group } from "../../models/Group";
 
@@ -8,6 +8,7 @@ import { validateRequest } from "../../errors";
 import { requireUserAuth } from "../../middleware/user/require-user-auth";
 import { createMessageAndSendToGroup } from "../../middleware/message/create-message-and-send-to-group";
 import { checkValidGroupId } from "../../middleware/message/check-valid-groupId";
+import mongoose from "mongoose";
 const router = express.Router();
 
 //user send message to group
@@ -30,6 +31,32 @@ router.post(
     res.send({
       status: "Message Sent",
     });
+    return;
+  }
+);
+
+router.get(
+  "/api/v1/groups/:groupId",
+  [param("groupId").isMongoId().withMessage("Group Id Must Be Valid")],
+  validateRequest,
+  async (req: Request, res: Response) => {
+    const groups = await Group.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(req.params.groupId),
+        },
+      },
+      {
+        $lookup: {
+          from: "messages",
+          localField: "messages",
+          foreignField: "_id",
+          as: "messages",
+        },
+      },
+    ]);
+    await optimizedGraphOutput(groups);
+    res.send(groups);
     return;
   }
 );
