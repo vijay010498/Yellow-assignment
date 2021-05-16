@@ -10,7 +10,6 @@ import { requireUserAuth } from "../../middleware/user/require-user-auth";
 import { createMessageAndSendToGroup } from "../../middleware/message/create-message-and-send-to-group";
 import { checkValidGroupId } from "../../middleware/message/check-valid-groupId";
 import mongoose from "mongoose";
-import Date = module;
 
 const router = express.Router();
 const DEFAULT_PER_PAGE = 5;
