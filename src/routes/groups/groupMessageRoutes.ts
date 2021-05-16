@@ -1,15 +1,19 @@
 // @ts-nocheck
-import express, { json, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { body, param } from "express-validator";
 import { User } from "../../models/User";
 import { Group } from "../../models/Group";
+import moment from "moment";
 
 import { validateRequest } from "../../errors";
 import { requireUserAuth } from "../../middleware/user/require-user-auth";
 import { createMessageAndSendToGroup } from "../../middleware/message/create-message-and-send-to-group";
 import { checkValidGroupId } from "../../middleware/message/check-valid-groupId";
 import mongoose from "mongoose";
+import Date = module;
+
 const router = express.Router();
+const DEFAULT_PER_PAGE = 5;
 
 //user send message to group
 router.post(
@@ -66,6 +70,13 @@ router.get(
   [],
   validateRequest,
   async (req: Request, res: Response) => {
+    //pagination
+    let page = parseInt(req.query.page) || 0;
+    const perPage = parseInt(req.query.perPage) || DEFAULT_PER_PAGE;
+    const totalGroups = await Group.find({}).countDocuments();
+    if (page >= Math.ceil(totalGroups / perPage) || page < 0) {
+      page = 0;
+    }
     //first get data
     const groups = await Group.aggregate([
       {
@@ -76,9 +87,19 @@ router.get(
           as: "messages",
         },
       },
+      {
+        $skip: perPage * page,
+      },
+      {
+        $limit: perPage,
+      },
     ]);
     await optimizedGraphOutput(groups);
-    res.send(groups);
+    res.send({
+      groups,
+      currentPage: page,
+      totalPages: Math.ceil(groups.length / perPage),
+    });
     return;
   }
 );
@@ -103,6 +124,9 @@ const optimizedGraphOutput = async (groups: Array<Object>) => {
       delete message.createdAt;
       message.timeStamp = messageCreateAtISO.getTime();
       message.messageId = messageId;
+      message.timeString = moment(message.timeStamp).format(
+        "DD MMM YYYY hh:mm a"
+      );
       let author;
       if (!authorCache[message.author]) {
         console.log("USER DETAILS NOT IN CACHE");
