@@ -58,7 +58,9 @@ router.post(
       req.session = {
         JWT,
       };
-      res.status(201).send(user);
+      res.status(201).send({
+        status: "CreateUser Success",
+      });
       return;
     } catch (err) {
       console.error(err);
@@ -106,7 +108,9 @@ router.post(
       req.session = {
         JWT,
       };
-      res.status(201).send(user);
+      res.status(201).send({
+        status: "SignIn Success",
+      });
       return;
     } catch (err) {
       console.error(err);
@@ -116,7 +120,7 @@ router.post(
   }
 );
 
-//temp to create group route
+/*//temp to create group route
 router.post(
   "/api/test/createGroup",
   [],
@@ -139,6 +143,6 @@ router.post(
       return;
     }
   }
-);
+);*/
 
 export { router as userAuthRoutes };
