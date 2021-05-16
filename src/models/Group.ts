@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 interface GroupAttrs {
-  messages: Array<mongoose.Schema.Types.ObjectId>;
+  name: String;
 }
 
 interface GroupModel extends mongoose.Model<GroupDoc> {
@@ -9,11 +9,17 @@ interface GroupModel extends mongoose.Model<GroupDoc> {
 }
 
 interface GroupDoc extends mongoose.Document {
+  name: String;
   messages: Array<mongoose.Schema.Types.ObjectId>;
 }
 
 const groupSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: true,
+      index: true,
+    },
     messages: {
       type: [
         {
@@ -22,7 +28,7 @@ const groupSchema = new mongoose.Schema(
           required: true,
         },
       ],
-      required: true,
+      required: false,
       default: [],
     },
   },

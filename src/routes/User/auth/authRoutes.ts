@@ -1,6 +1,7 @@
 import express, { json, Request, Response } from "express";
 import { body } from "express-validator";
 import { User } from "../../../models/User";
+import { Group } from "../../../models/Group";
 import jwt from "jsonwebtoken";
 import {
   BadRequestError,
@@ -106,6 +107,31 @@ router.post(
         JWT,
       };
       res.status(201).send(user);
+      return;
+    } catch (err) {
+      console.error(err);
+      res.status(401).send(err);
+      return;
+    }
+  }
+);
+
+//temp to create group route
+router.post(
+  "/api/test/createGroup",
+  [],
+  validateRequest,
+  async (req: Request, res: Response) => {
+    //group name
+    const { name } = req.body;
+    //create group
+    try {
+      const group = Group.build({
+        name,
+      });
+      await group.save();
+
+      res.status(201).send(group);
       return;
     } catch (err) {
       console.error(err);
