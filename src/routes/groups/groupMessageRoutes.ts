@@ -123,9 +123,9 @@ const optimizedGraphOutput = async (groups: Array<Object>) => {
       delete message.createdAt;
       message.timeStamp = messageCreateAtISO.getTime();
       message.messageId = messageId;
-      message.timeString = moment(message.timeStamp).format(
-        "DD MMM YYYY hh:mm a"
-      );
+      message.timeString = moment(message.timeStamp)
+        .utcOffset("+05:30")
+        .format("DD MMM YYYY hh:mm a");
       let author;
       if (!authorCache[message.author]) {
         console.log("USER DETAILS NOT IN CACHE");
