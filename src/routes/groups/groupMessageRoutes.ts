@@ -71,11 +71,12 @@ router.get(
   async (req: Request, res: Response) => {
     //pagination
     let page = parseInt(req.query.page) || 0;
-    const perPage = parseInt(req.query.perPage) || DEFAULT_PER_PAGE;
+    let perPage = parseInt(req.query.perPage) || DEFAULT_PER_PAGE;
     const totalGroups = await Group.find({}).countDocuments();
     if (page >= Math.ceil(totalGroups / perPage) || page < 0) {
       page = 0;
     }
+    if (perPage > totalGroups) perPage = DEFAULT_PER_PAGE;
     //first get data
     const groups = await Group.aggregate([
       {
