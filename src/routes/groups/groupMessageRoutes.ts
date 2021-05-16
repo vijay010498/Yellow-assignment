@@ -1,12 +1,12 @@
 import express, { json, Request, Response } from "express";
 import { body } from "express-validator";
-import { Message } from "../../../models/Message";
-import { Group } from "../../../models/Group";
+import { Message } from "../../models/Message";
+import { Group } from "../../models/Group";
 
-import { validateRequest } from "../../../errors";
-import { requireUserAuth } from "../../../middleware/user/require-user-auth";
-import { createMessageAndSendToGroup } from "../../../middleware/message/create-message-and-send-to-group";
-import { checkValidGroupId } from "../../../middleware/message/check-valid-groupId";
+import { validateRequest } from "../../errors";
+import { requireUserAuth } from "../../middleware/user/require-user-auth";
+import { createMessageAndSendToGroup } from "../../middleware/message/create-message-and-send-to-group";
+import { checkValidGroupId } from "../../middleware/message/check-valid-groupId";
 const router = express.Router();
 
 //user send message to group
