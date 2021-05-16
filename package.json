@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "15.9.0",
+    "npm": "7.6.0"
+  },
   "scripts": {
     "start": "ts-node-dev src/index.ts",
     "dev": "ts-node-dev src/index.ts"
