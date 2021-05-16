@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-//Interface that describes the properties that are required to create a new Message
 interface MessageAttrs {
   author: mongoose.Schema.Types.ObjectId;
   content: string;
