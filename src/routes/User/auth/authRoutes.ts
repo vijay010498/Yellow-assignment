@@ -58,9 +58,7 @@ router.post(
       req.session = {
         JWT,
       };
-      res.status(201).send({
-        status: "CreateUser Success",
-      });
+      res.status(201).send(user);
       return;
     } catch (err) {
       console.error(err);
@@ -108,9 +106,7 @@ router.post(
       req.session = {
         JWT,
       };
-      res.status(201).send({
-        status: "SignIn Success",
-      });
+      res.status(201).send(user);
       return;
     } catch (err) {
       console.error(err);
