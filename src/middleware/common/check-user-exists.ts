@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "../../models/User";
-import { BadRequestError } from "../bad-request-error";
+import { BadRequestError } from "../../errors/bad-request-error";
 
 export const checkUserExists = async (
   req: Request,

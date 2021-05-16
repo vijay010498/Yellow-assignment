@@ -8,6 +8,7 @@ import cookieSession from "cookie-session";
 
 //all routes
 import { userAuthRoutes } from "./routes/User/auth/authRoutes";
+import { userMessageRoutes } from "./routes/User/message/messageRoutes";
 
 const app = express();
 app.use(json());
@@ -21,6 +22,7 @@ app.use(
 app.set("trust proxy", true);
 
 app.use(userAuthRoutes);
+app.use(userMessageRoutes);
 app.use(testRouter);
 app.use(errorhandler);
 app.all("*", async (req, res) => {

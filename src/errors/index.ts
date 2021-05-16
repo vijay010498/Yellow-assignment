@@ -5,5 +5,5 @@ export * from "./not-authorized-error";
 export * from "./not-found-error";
 export * from "./request-validation-error";
 
-export * from "./middleware/error-handler";
-export * from "./middleware/validate-request";
+export * from "../middleware/common/error-handler";
+export * from "../middleware/common/validate-request";

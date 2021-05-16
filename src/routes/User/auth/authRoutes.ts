@@ -8,7 +8,7 @@ import {
   NotAuthorizedError,
   validateRequest,
 } from "../../../errors";
-import { checkUserExists } from "../../../errors/middleware/check-user-exists";
+import { checkUserExists } from "../../../middleware/common/check-user-exists";
 import { Password } from "../../../services/auth/password";
 const keys = require("../../../config/keys");
 const router = express.Router();
