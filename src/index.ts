@@ -15,6 +15,7 @@ const start = async () => {
     }
   }
   try {
+    console.log("CONNECTING TO MONGO DB");
     await mongoose.connect(keys.mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

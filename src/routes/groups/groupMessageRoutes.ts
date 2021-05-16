@@ -1,6 +1,7 @@
+// @ts-nocheck
 import express, { json, Request, Response } from "express";
 import { body } from "express-validator";
-import { Message } from "../../models/Message";
+import { User } from "../../models/User";
 import { Group } from "../../models/Group";
 
 import { validateRequest } from "../../errors";
@@ -32,4 +33,61 @@ router.post(
     return;
   }
 );
+
+router.get(
+  "/api/v1/groups",
+  [],
+  validateRequest,
+  async (req: Request, res: Response) => {
+    //first get data
+    const groups = await Group.aggregate([
+      {
+        $lookup: {
+          from: "messages",
+          localField: "messages",
+          foreignField: "_id",
+          as: "messages",
+        },
+      },
+    ]);
+    await optimizedGraphOutput(groups);
+    res.send(groups);
+    return;
+  }
+);
+
+const optimizedGraphOutput = async (groups: Array<Object>) => {
+  let authorCache = {};
+  for (let group of groups) {
+    const groupId = group._id;
+    delete group._id;
+    delete group.__v;
+    delete group.updatedAt;
+    const createdAtISO = group.createdAt;
+    delete group.createdAt;
+    group.createdAt = createdAtISO.getTime();
+    group.groupId = groupId;
+    for (let message of group.messages) {
+      const messageId = message._id;
+      delete message._id;
+      delete message.__v;
+      delete message.updatedAt;
+      const messageCreateAtISO = message.createdAt;
+      delete message.createdAt;
+      message.timeStamp = messageCreateAtISO.getTime();
+      message.messageId = messageId;
+      let author;
+      if (!authorCache[message.author]) {
+        console.log("USER DETAILS NOT IN CACHE");
+        author = await User.findById(message.author);
+        authorCache[message.author] = author;
+      } else {
+        console.log(" USER DETAILS SERVING FROM CACHE");
+        author = authorCache[message.author];
+      }
+      message.author = author.name;
+      message.authorId = author._id;
+    }
+  }
+};
 export { router as userMessageRoutes };

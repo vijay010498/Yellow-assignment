@@ -8,7 +8,7 @@ import cookieSession from "cookie-session";
 
 //all routes
 import { userAuthRoutes } from "./routes/User/auth/authRoutes";
-import { userMessageRoutes } from "./routes/message/messageRoutes";
+import { userMessageRoutes } from "./routes/groups/groupMessageRoutes";
 
 const app = express();
 app.use(json());
